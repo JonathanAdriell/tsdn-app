@@ -92,19 +92,22 @@ def main():
         """)
 
     with tab2:
-        st.write("## Bagaimana Katarak Dideteksi")
+        st.image(Image.open("assets/katarak.png"), caption="Gambar Retina untuk Katarak", use_container_width=True)
         st.write("""
         **Katarak** adalah kondisi di mana lensa mata menjadi keruh, menghalangi cahaya mencapai retina dan menyebabkan penglihatan kabur. Deteksi katarak dapat dilakukan melalui **analisis gambar retina**, dengan mencari tanda-tanda kekeruhan pada lensa mata. **Machine learning** dapat menganalisis gambar ini dan mendeteksi katarak pada tahap awal, memungkinkan pengobatan yang lebih efektif.
         """)
 
     with tab3:
-        st.write("## Bagaimana Retinopati Diabetik Dideteksi")
+        left_col, center_col, right_col = st.columns([1, 4, 1])
+        with center_col:
+            st.image(Image.open("assets/retinopati_diabetik.jpeg"), caption="Gambar Retina untuk Retinopati Diabetik", width=450)
+    
         st.write("""
         **Retinopati diabetik** adalah komplikasi mata pada penderita diabetes yang terjadi akibat kerusakan pembuluh darah di retina. Gejala yang dapat dikenali meliputi **pembuluh darah yang bocor** atau **perubahan bentuk pembuluh darah**. Deteksi dini retinopati diabetik sangat penting untuk mencegah kebutaan, dan machine learning dapat membantu dalam proses deteksi ini melalui gambar retina.
         """)
 
     with tab4:
-        st.write("## Bagaimana Glaukoma Dideteksi")
+        st.image(Image.open("assets/glaukoma.png"), caption="Gambar Retina untuk Glaukoma", use_container_width=True)
         st.write("""
         **Glaukoma** adalah penyakit mata yang terjadi ketika tekanan dalam mata meningkat, merusak saraf optik dan berisiko menyebabkan kebutaan. Deteksi glaukoma dapat dilakukan dengan mengukur perubahan dalam **rasio Optic Cup (OC)** dan **Optic Disc (OD)**. Machine learning dapat menganalisis gambar retina untuk mendeteksi perubahan kecil ini, yang merupakan tanda awal glaukoma.
         """)
