@@ -53,6 +53,37 @@ def plot_probabilities(probabilities):
     st.pyplot(plt)
 
 
+def generate_saliency_map(model, image_tensor, predicted_index, device):
+    model.eval()
+    model.to(device)
+    image_tensor = image_tensor.to(device)
+    image_tensor.requires_grad_()
+
+    # Forward pass
+    outputs = model(image_tensor)
+    class_score = outputs.logits[0, predicted_index]
+    
+    # Backward pass to get the gradients
+    model.zero_grad()
+    class_score.backward()
+
+    gradients = image_tensor.grad[0].cpu().detach().numpy()
+    saliency_map = np.max(np.abs(gradients), axis=0)
+
+    return saliency_map
+
+
+def plot_saliency_map(saliency_map):
+    saliency_map = saliency_map - saliency_map.min()
+    saliency_map = saliency_map / saliency_map.max()
+
+    plt.figure(figsize=(8, 5))
+    plt.imshow(saliency_map)
+    plt.axis('off')
+    plt.title("Saliency Map")
+    st.pyplot(plt)
+
+
 def main():
     st.set_page_config(
         page_title="PANDAWA - Eye Disease Detection",
@@ -146,6 +177,12 @@ def main():
         st.write(f"**Prediksi Kondisi Mata**: {predicted_class}")
         st.write("Dengan probabilitas untuk setiap kondisi mata:")
         plot_probabilities(probabilities)
+
+        st.write("Saliency map menunjukkan bagian-bagian gambar yang paling mempengaruhi keputusan model dalam membuat prediksi. Berikut adalah saliency map berdasarkan prediksi model:")
+        predicted_index = LABELS.index(predicted_class)
+        saliency_map = generate_saliency_map(model, image_tensor, predicted_index, device)
+        plot_saliency_map(saliency_map)
+
 
 if __name__ == "__main__":
     main()
