@@ -98,15 +98,15 @@ def main():
         """)
 
     with tab3:
-        st.write("## Bagaimana Glaukoma Dideteksi")
-        st.write("""
-        **Glaukoma** adalah penyakit mata yang terjadi ketika tekanan dalam mata meningkat, merusak saraf optik dan berisiko menyebabkan kebutaan. Deteksi glaukoma dapat dilakukan dengan mengukur perubahan dalam **rasio Optic Cup (OC)** dan **Optic Disc (OD)**. Machine learning dapat menganalisis gambar retina untuk mendeteksi perubahan kecil ini, yang merupakan tanda awal glaukoma.
-        """)
-
-    with tab4:
         st.write("## Bagaimana Retinopati Diabetik Dideteksi")
         st.write("""
         **Retinopati diabetik** adalah komplikasi mata pada penderita diabetes yang terjadi akibat kerusakan pembuluh darah di retina. Gejala yang dapat dikenali meliputi **pembuluh darah yang bocor** atau **perubahan bentuk pembuluh darah**. Deteksi dini retinopati diabetik sangat penting untuk mencegah kebutaan, dan machine learning dapat membantu dalam proses deteksi ini melalui gambar retina.
+        """)
+
+    with tab4:
+        st.write("## Bagaimana Glaukoma Dideteksi")
+        st.write("""
+        **Glaukoma** adalah penyakit mata yang terjadi ketika tekanan dalam mata meningkat, merusak saraf optik dan berisiko menyebabkan kebutaan. Deteksi glaukoma dapat dilakukan dengan mengukur perubahan dalam **rasio Optic Cup (OC)** dan **Optic Disc (OD)**. Machine learning dapat menganalisis gambar retina untuk mendeteksi perubahan kecil ini, yang merupakan tanda awal glaukoma.
         """)
 
     st.markdown("<hr style='border: 1px solid #007ACC;'>", unsafe_allow_html=True)
