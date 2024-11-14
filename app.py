@@ -1,8 +1,13 @@
 import streamlit as st
 import torch
+import matplotlib.pyplot as plt
+import matplotlib.cm as cm
+import numpy as np
 from transformers import AutoModelForImageClassification
 from torchvision import transforms
 from PIL import Image
+
+LABELS = ["Katarak", "Retinopati Diabetik", "Glaukoma", "Normal"]
 
 
 def load_model(model_path, device):
@@ -24,20 +29,28 @@ def process_image(image):
     return transform(image).unsqueeze(0)
 
 
-def decode_label(class_index):
-    label_map = {0: "Karatak", 1: "Retinopati Diabetik", 2: "Glaukoma", 3: "Normal"}
-    return label_map.get(class_index, "Unknown")
-
-
-def predict(model, image_tensor, device):
+def predict_with_probabilities(model, image_tensor, device):
     model.eval()
     model.to(device)
     image_tensor = image_tensor.to(device)
 
     with torch.no_grad():
         outputs = model(image_tensor).logits
-        predicted_class_index = torch.argmax(outputs, dim=1).item()
-    return decode_label(predicted_class_index)
+        probabilities = torch.nn.functional.softmax(outputs, dim=1).cpu().numpy()[0]
+    predicted_class_index = torch.argmax(outputs, dim=1).item()
+    return probabilities, LABELS[predicted_class_index]
+
+
+def plot_probabilities(probabilities):
+    normalized_probs = (probabilities - np.min(probabilities)) / (np.max(probabilities) - np.min(probabilities))
+    colors = cm.viridis(normalized_probs)
+    
+    plt.figure(figsize=(8, 5))
+    plt.barh(LABELS, probabilities, color=colors)
+    plt.xlabel("Probabilitas")
+    plt.ylabel("Kondisi Mata")
+    plt.title("Probabilitas Prediksi untuk Setiap Kondisi Mata")
+    st.pyplot(plt)
 
 
 def main():
@@ -128,9 +141,11 @@ def main():
         model = load_model(model_path, device)
 
         image_tensor = process_image(image)
-        predicted_class = predict(model, image_tensor, device)
+        probabilities, predicted_class = predict_with_probabilities(model, image_tensor, device)
 
-        st.write(f"**Prediksi Kelas**: {predicted_class}")
+        st.write(f"**Prediksi Kondisi Mata**: {predicted_class}")
+        st.write("Dengan probabilitas untuk setiap kondisi mata:")
+        plot_probabilities(probabilities)
 
 if __name__ == "__main__":
     main()
