@@ -67,6 +67,14 @@ Aplikasi ini menggunakan **EfficientNet** sebagai model dasar dan dilengkapi den
 7. **Akses aplikasi**:
    - Buka browser dan akses: `http://localhost:8501`
 
+
+### Aplikasi yang Dideploy
+
+Anda bisa langsung mencoba aplikasi **PANDAWA** yang sudah dideploy secara online. Cukup klik link berikut untuk mengakses informasi dan memanfaatkan fitur prediksi kondisi mata:
+
+[**Coba Aplikasi PANDAWA**](https://eye-disease-classification.streamlit.app/)
+
+
 ### Struktur Proyek
 
 ```plaintext
