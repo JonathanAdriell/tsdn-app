@@ -99,15 +99,42 @@ def generate_saliency_map(model, image_tensor, predicted_index, device):
 
 
 def plot_saliency_map(saliency_map):
-    saliency_map = saliency_map - saliency_map.min()
-    saliency_map = saliency_map / saliency_map.max()
-
     plt.figure(figsize=(8, 5))
-    plt.imshow(saliency_map)
-
+    plt.imshow(saliency_map, cmap="turbo")
     plt.axis("off")
     plt.title("Saliency Map")
     st.pyplot(plt)
+
+
+def interpret_saliency_map(predicted_index):
+    saliency_explanations = {
+        0: (
+            "Pada gambar fundus dengan katarak, saliency map menyoroti area buram pada mata, "
+            "yang ditunjukkan dengan warna yang lebih terang. Hal ini menunjukkan bahwa model memperhatikan "
+            "wilayah di mana penurunan ketajaman penglihatan terjadi akibat katarak. Secara visual, mata yang "
+            "terkena katarak cenderung terlihat buram dibandingkan dengan fundus mata pada kondisi lain."
+        ),
+        1: (
+            "Pada gambar fundus dengan retinopati diabetik, saliency map menyoroti pembuluh darah yang lebih jelas "
+            "atau menonjol. Hal ini menunjukkan bahwa model memanfaatkan informasi pembuluh darah sebagai indikator awal "
+            "retinopati diabetik, yang sesuai dengan kenyataan karena retinopati diabetik seringkali menyebabkan perubahan "
+            "pada pembuluh darah retina, seperti penyumbatan atau pembentukan pembuluh darah baru. Pembuluh darah baru ini cenderung lebih rapuh "
+            "dan rentan pecah jika tidak berkembang dengan baik, yang dapat menyebabkan perdarahan retina."
+        ),
+        2: (
+            "Pada gambar fundus dengan glaukoma, saliency map menyoroti area sekitar cakram optik (diskus optikus). "
+            "Hal ini sesuai kenyataan bahwa glaukoma biasanya berkaitan dengan tekanan intraokular yang dapat "
+            "memengaruhi bentuk dan kesehatan cakram optik. Hal ini mengindikasikan bahwa model menggunakan struktur "
+            "cakram optik yang membesar sebagai indikator awal glaukoma."
+        ),
+        3: (
+            "Pada gambar fundus mata normal, saliency map tidak terfokus pada area tertentu, melainkan menunjukkan "
+            "penyebaran yang lebih merata di seluruh retina. Model mempelajari bahwa mata dalam kondisi normal tidak menunjukkan "
+            "kelainan atau perubahan mencolok pada struktur retina, yang menyebabkan titik terang pada saliency map tersebar secara merata "
+            "tanpa fokus pada satu area tertentu."
+        ),
+    }
+    return saliency_explanations[predicted_index]
 
 
 def main():
@@ -261,6 +288,12 @@ def main():
             model, image_tensor, predicted_index, device
         )
         plot_saliency_map(saliency_map)
+
+        saliency_description = interpret_saliency_map(predicted_index)
+        st.write(saliency_description)
+        st.write(
+            "Dengan saliency map ini, dokter juga dapat memverifikasi hasil model, memastikan bahwa area yang terdeteksi benar-benar relevan secara medis dan mendukung pengambilan keputusan yang lebih tepat."
+        )
 
 
 if __name__ == "__main__":
