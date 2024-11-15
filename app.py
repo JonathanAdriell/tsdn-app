@@ -1,5 +1,6 @@
 import streamlit as st
 import torch
+from matplotlib.patches import Patch
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 import numpy as np
@@ -42,16 +43,38 @@ def predict_with_probabilities(model, image_tensor, device):
 
 
 def plot_probabilities(probabilities):
-    normalized_probs = (probabilities - np.min(probabilities)) / (
-        np.max(probabilities) - np.min(probabilities)
+    sorted_indices = np.argsort(probabilities)
+    sorted_probs = np.array(probabilities)[sorted_indices]
+    sorted_labels = np.array(LABELS)[sorted_indices]
+
+    normalized_probs = (sorted_probs - np.min(sorted_probs)) / (
+        np.max(sorted_probs) - np.min(sorted_probs)
     )
     colors = cm.viridis(normalized_probs)
 
     plt.figure(figsize=(8, 5))
-    plt.barh(LABELS, probabilities, color=colors)
+    plt.barh(sorted_labels, sorted_probs, color=colors)
     plt.xlabel("Probabilitas")
     plt.ylabel("Kondisi Mata")
     plt.title("Probabilitas Prediksi untuk Setiap Kondisi Mata")
+
+    legend_elements = [
+        Patch(
+            facecolor=colors[i],
+            edgecolor="none",
+            label=f"{sorted_labels[i]}: {sorted_probs[i]:.2f}",
+        )
+        for i in range(len(sorted_labels))
+    ]
+
+    plt.legend(
+        handles=legend_elements[::-1],
+        loc="upper right",
+        bbox_to_anchor=(1.01, -0.2),
+        title="Probabilitas",
+    )
+    plt.tight_layout()
+
     st.pyplot(plt)
 
 
